@@ -49,7 +49,7 @@ namespace UDS上位机
     {
         ParseS19File S19FileParser;//S19文件解析器
         ParseHexFile HexFileParser;//Hex文件解析器
-        //ParseBinFile BinFileParser;//Bin文件解析器
+        ParseBinFile BinFileParser;//Bin文件解析器
         public List<DataBlock> s19APP1BlockList;//S19APP1数据块列表
         public List<DataBlock> s19APP2BlockList;//S19APP2数据块列表
         public List<DataBlock> s19DriBlockList;//S19Dri数据块列表
@@ -57,6 +57,9 @@ namespace UDS上位机
         public List<DataBlock> HexAPP2BlockList;//HexAPP2数据块列表
         public List<DataBlock> HexDriBlockList;//HexDri数据块列表
         public List<DataBlock> BinBlockList;//Bin数据块列表
+        public List<DataBlock> BinAPP1BlockList;//BinAPP1数据块列表
+        public List<DataBlock> BinAPP2BlockList;//BinAPP2数据块列表
+        public List<DataBlock> BinDriBlockList;//BinDri数据块列表
         public ECUConfigInfo SelectECUConfig = new ECUConfigInfo();//选择的ECU
         public Thread BTThread;//BT刷写线程
         public int APP1FileType = 0;//APP1文件类型，0：s19 1：Hex 2：Bin
@@ -71,7 +74,9 @@ namespace UDS上位机
             HexAPP1BlockList = new List<DataBlock>();//S19APP1数据块列表
             HexAPP2BlockList = new List<DataBlock>();//S19APP2数据块列表
             HexDriBlockList = new List<DataBlock>();//S19Dri数据块列表
-            BinBlockList = new List<DataBlock>();//Bin数据块列表
+            BinAPP1BlockList = new List<DataBlock>();//BinAPP1数据块列表
+            BinAPP2BlockList = new List<DataBlock>();//BinAPP2数据块列表
+            BinDriBlockList = new List<DataBlock>();//BinDri数据块列表
             BTThread = new Thread(new ThreadStart(BTProcess));
         }
         //BT执行流程
@@ -168,7 +173,19 @@ namespace UDS上位机
 
             return 1;
         }
+        //解析Bin文件
+        public int ParseBinFile(string filename, ref List<DataBlock> BinBlockList)
+        {
+            if (filename == null)
+            {
+                return 0;
+            }
+            BinFileParser = new ParseBinFile();
+            if (BinFileParser.ParseBinfile(filename, ref BinBlockList) == false)
+                return 0;
 
+            return 1;
+        }
         //目前可支持1801的CCM，BCM，PEPS，IC，DAS，DSM，BSD
         public int LoadECUConfig()
         {

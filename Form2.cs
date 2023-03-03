@@ -352,6 +352,23 @@ namespace UDS上位机
                     //Console.Write("\r\r\n");*/
                 }
             }
+            else if (this.textBox1.Text.EndsWith("bin") || this.textBox1.Text.EndsWith("BIN"))
+            {
+                BT.APP1FileType = 2;
+                if (1 != BT.ParseBinFile(this.textBox1.Text, ref BT.BinAPP1BlockList))
+                {
+                    MessageBox.Show("解析APP刷写文件失败，检查文件！", "失败",
+                                MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    return;
+                }
+                //统计数据长度
+                for (int i = 0; i < BT.BinAPP1BlockList.Count; i++)
+                {
+                    
+                    TotalData += BT.BinAPP1BlockList[i].data.Count;
+                    
+                }
+            }
             //解析driver文件，可为空
             if (this.textBox2.Text != "")
             {
@@ -406,6 +423,21 @@ namespace UDS上位机
                             //Console.Write("{0:x} ", d);
                         }*/
                         ////Console.Write("\r\r\n");
+                    }
+                }
+                else if (this.textBox1.Text.EndsWith("bin") || this.textBox1.Text.EndsWith("BIN"))
+                {
+                    BT.DriFileType = 2;
+                    if (1 != BT.ParseHexFile(this.textBox2.Text, ref BT.BinDriBlockList))
+                    {
+                        MessageBox.Show("解析Driver刷写文件失败，检查文件！", "失败",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        return;
+                    }
+                    //统计数据长度
+                    for (int i = 0; i < BT.BinDriBlockList.Count; i++)
+                    {
+                        TotalData += BT.BinDriBlockList[i].data.Count;
                     }
                 }
             }

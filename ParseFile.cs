@@ -403,6 +403,7 @@ namespace UDS上位机
             }
             return true;
         }
+        
         private int getNextAddress(DataBlock HexBlock, List<DataLine> Hex, int i)
         {
             HexBlock.address = Hex[i].address;
@@ -503,4 +504,38 @@ namespace UDS上位机
             }
         }
     }
+    class BinFileParser
+    {
+        List<DataLine> bin;
+        public string? UserName { get; set; }
+        public ParseBinFile()
+        {
+            bin = new List<DataLine>();
+        }
+        public bool ParseBinFile(string filename, ref List<DataBlock> BinBlockList)
+        {
+            StreamReader read = new StreamReader(filename);
+            FileStream BinFile = new FileStream(filename, FileMode.Open, FileAccess.Read);
+            BinaryReader BinFileReader = new BinaryReader(BinFile);
+            DataBlock BinDataBlock = new DataBlock();
+           try
+           {
+                //获取Bin文件数据到BinBlockList
+               for (long k = 0; k < BinFile.Length; k++)
+               {
+                    BinDataBlock.data.Add(BinFileReader.ReadByte());
+                }
+           }
+           catch
+           {
+                return false;
+           }
+
+           BinBlockList.Add(BinDataBlock);
+           return true;
+
+        }
+
+    }
+    
 }
